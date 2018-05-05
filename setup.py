@@ -41,7 +41,7 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
     ]
 
 setup(
-    name="Electrum",
+    name="Electrum-XPM",
     version=version.ELECTRUM_VERSION,
     install_requires=requirements,
     extras_require={
@@ -83,12 +83,12 @@ setup(
             'locale/*/LC_MESSAGES/electrum.mo',
         ]
     },
-    scripts=['electrum'],
+    scripts=['electrum-xpm'],
     data_files=data_files,
-    description="Lightweight Bitcoin Wallet",
+    description="Lightweight XPM Wallet",
     author="Thomas Voegtlin",
     author_email="thomasv@electrum.org",
     license="MIT Licence",
     url="https://electrum.org",
-    long_description="""Lightweight Bitcoin Wallet"""
+    long_description="""Lightweight XPM Wallet"""
 )
