@@ -286,6 +286,7 @@ class Interface(util.PrintError):
         '''
         self.request_time = time.time()
         self.unsent_requests.append(args)
+        self.print_error(self.unsent_requests)
 
     def num_requests(self):
         '''Keep unanswered requests below 100'''
@@ -349,8 +350,7 @@ class Interface(util.PrintError):
                     self.closed_remotely = True
                     self.print_error("connection closed remotely")
                 break
-            if self.debug:
-                self.print_error("<--", response)
+            self.print_error("<--", response)
             wire_id = response.get('id', None)
             if wire_id is None:  # Notification
                 responses.append((None, response))

@@ -304,7 +304,8 @@ class Network(util.DaemonThread):
         return message_id
 
     def send_subscriptions(self):
-        self.print_error('sending subscriptions to', self.interface.server, len(self.unanswered_requests), len(self.subscribed_addresses))
+        if self.debug:
+            self.print_error('sending subscriptions to', self.interface.server, len(self.unanswered_requests), len(self.subscribed_addresses))
         self.sub_cache.clear()
         # Resend unanswered requests
         requests = self.unanswered_requests.values()
@@ -826,6 +827,7 @@ class Network(util.DaemonThread):
         chain = blockchain.check_header(header)
         if interface.mode == 'backward':
             can_connect = blockchain.can_connect(header)
+            
             if can_connect and can_connect.catch_up is None:
                 interface.mode = 'catch_up'
                 interface.blockchain = can_connect
@@ -841,9 +843,11 @@ class Network(util.DaemonThread):
                 assert next_height >= self.max_checkpoint(), (interface.bad, interface.good)
             else:
                 if height == 0:
+                    
                     self.connection_down(interface.server)
                     next_height = None
                 else:
+                    self.print_error('1')
                     interface.bad = height
                     interface.bad_header = header
                     delta = interface.tip - height
@@ -903,6 +907,7 @@ class Network(util.DaemonThread):
                 self.notify('updated')
 
         elif interface.mode == 'catch_up':
+            self.print_error('interfacecatchup')
             can_connect = interface.blockchain.can_connect(header)
             if can_connect:
                 interface.blockchain.save_header(header)
@@ -927,7 +932,7 @@ class Network(util.DaemonThread):
         # If not finished, get the next header
         if next_height:
             if interface.mode == 'catch_up' and interface.tip > next_height + 50:
-                self.request_chunk(interface, next_height // 2016)
+                self.request_chunk(interface, next_height // 1008)
             else:
                 self.request_header(interface, next_height)
         else:
@@ -969,7 +974,7 @@ class Network(util.DaemonThread):
     def init_headers_file(self):
         b = self.blockchains[0]
         filename = b.path()
-        length = 80 * len(constants.net.CHECKPOINTS) * 2016
+        length = 336 * len(constants.net.CHECKPOINTS) * 1008
         if not os.path.exists(filename) or os.path.getsize(filename) < length:
             with open(filename, 'wb') as f:
                 if length>0:
@@ -1094,4 +1099,4 @@ class Network(util.DaemonThread):
             f.write(json.dumps(cp, indent=4))
 
     def max_checkpoint(self):
-        return max(0, len(constants.net.CHECKPOINTS) * 2016 - 1)
+        return max(0, len(constants.net.CHECKPOINTS) * 1008 - 1)
