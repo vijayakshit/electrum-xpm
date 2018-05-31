@@ -42,10 +42,8 @@ def serialize_header(res):
     return s
 
 def serialize_header_hash(res):
-    multLen = int(res.get('bnPrimeChainMultiplier')[:2],16)
-    multLen = (multLen * 2) + 2
-    print(multLen)
-    print(res.get('bnPrimeChainMultiplier')[:multLen])
+    #todo: merge this with below and modify callers
+    multLen = (int(res.get('bnPrimeChainMultiplier')[:2],16) * 2) + 2
     s = int_to_hex(res.get('version'), 4) \
         + rev_hex(res.get('prev_block_hash')) \
         + rev_hex(res.get('merkle_root')) \
@@ -56,10 +54,7 @@ def serialize_header_hash(res):
     return s
 
 def serialize_header_save(res):
-    multLen = int(res.get('bnPrimeChainMultiplier')[:2],16)
-    multLen = (multLen * 2) + 2
-    print(multLen)
-    print(res.get('bnPrimeChainMultiplier')[:multLen])
+    multLen = (int(res.get('bnPrimeChainMultiplier')[:2],16) * 2) + 2
     s = int_to_hex(res.get('version'), 4) \
         + rev_hex(res.get('prev_block_hash')) \
         + rev_hex(res.get('merkle_root')) \
@@ -102,9 +97,6 @@ def deserialize_header_hash(s, height):
     bnLength = (hex_to_int((s[80:81])))
     h['bnPrimeChainMultiplier'] = s[80:(80 + bnLength + 1)].hex()
     h['block_height'] = height
-    print(bnLength)
-    print('.. bin')
-    print(h['bnPrimeChainMultiplier'])
     return h
 
 def hash_header(header):
@@ -220,8 +212,6 @@ class Blockchain(util.PrintError):
     def verify_chunk(self, index, data):
         num = len(data) // 336
         prev_hash = self.get_hash(index * 1008 - 1)
-        print('prehash')
-        print(prev_hash)
         target = self.get_target(index-1)
         for i in range(num):
             raw_header = data[i*336:(i+1) * 336]
@@ -306,15 +296,11 @@ class Blockchain(util.PrintError):
         delta = header.get('block_height') - self.checkpoint
         data = bfh(serialize_header(header))
         assert delta == self.size()
-        print(len(data))
         assert len(data) == 336
         self.write(data, delta*336)
         self.swap_with_parent()
 
     def read_header(self, height):
-        print('readheader')
-        print(height)
-    
         assert self.parent_id != self.checkpoint
         if height < 0:
             return
@@ -326,12 +312,9 @@ class Blockchain(util.PrintError):
         name = self.path()
         self.assert_headers_file_available(name)
         with open(name, 'rb') as f:
-            print('delta')
-            print(delta)
             f.seek(delta * 336)
             h = f.read(336)
             if len(h) < 336:
-                print(self.checkpoint)
                 raise Exception('Expected to read a full header. This was only {} bytes'.format(len(h)))
         if h == bytes([0])*336:
             return None
@@ -396,20 +379,10 @@ class Blockchain(util.PrintError):
             return False
         height = header['block_height']
         if check_height and self.height() != height - 1:
-            self.print_error('self.height')
-            self.print_error(self.height())
-            self.print_error('height')
-            self.print_error(height)
-            self.print_error('______')
-
             self.print_error("cannot connect at height", height)
             return False
         if height == 0:
-            self.print_error('height is zero so what')
             self.print_error('hash_header(header) == constants.net.GENESIS')
-            self.print_error(header)
-            self.print_error(hash_header(header))
-            self.print_error(constants.net.GENESIS)
             return hash_header(header) == constants.net.GENESIS
         try:
             prev_hash = self.get_hash(height - 1)

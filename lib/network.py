@@ -304,8 +304,7 @@ class Network(util.DaemonThread):
         return message_id
 
     def send_subscriptions(self):
-        if self.debug:
-            self.print_error('sending subscriptions to', self.interface.server, len(self.unanswered_requests), len(self.subscribed_addresses))
+        self.print_error('sending subscriptions to', self.interface.server, len(self.unanswered_requests), len(self.subscribed_addresses))
         self.sub_cache.clear()
         # Resend unanswered requests
         requests = self.unanswered_requests.values()
@@ -847,7 +846,6 @@ class Network(util.DaemonThread):
                     self.connection_down(interface.server)
                     next_height = None
                 else:
-                    self.print_error('1')
                     interface.bad = height
                     interface.bad_header = header
                     delta = interface.tip - height
@@ -907,7 +905,6 @@ class Network(util.DaemonThread):
                 self.notify('updated')
 
         elif interface.mode == 'catch_up':
-            self.print_error('interfacecatchup')
             can_connect = interface.blockchain.can_connect(header)
             if can_connect:
                 interface.blockchain.save_header(header)
