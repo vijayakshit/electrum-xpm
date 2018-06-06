@@ -31,6 +31,9 @@ from .bitcoin import *
 #MAX_TARGET = 0x00000000FFFF0000000000000000000000000000000000000000000000000000
 MAX_TARGET = 0x1FFFE00000000000000000000000000000000000000000000000000000
 
+HEADER_BYTES = constants.HEADER_BYTES
+CHUNK_LENGTH = constants.CHUNK_LENGTH
+
 def serialize_header(res):
     s = int_to_hex(res.get('version'), 4) \
         + rev_hex(res.get('prev_block_hash')) \
@@ -195,7 +198,7 @@ class Blockchain(util.PrintError):
 
     def update_size(self):
         p = self.path()
-        self._size = os.path.getsize(p)//336 if os.path.exists(p) else 0
+        self._size = os.path.getsize(p)//HEADER_BYTES if os.path.exists(p) else 0
 
     def verify_header(self, header, prev_hash, target):
         _hash = hash_header(header)
@@ -210,12 +213,12 @@ class Blockchain(util.PrintError):
             raise Exception("insufficient proof of work: %s vs target %s" % (int('0x' + _hash, 16), target))
 
     def verify_chunk(self, index, data):
-        num = len(data) // 336
-        prev_hash = self.get_hash(index * 1008 - 1)
+        num = len(data) // HEADER_BYTES
+        prev_hash = self.get_hash(index * CHUNK_LENGTH - 1)
         target = self.get_target(index-1)
         for i in range(num):
-            raw_header = data[i*336:(i+1) * 336]
-            header = deserialize_header(raw_header, index*1008 + i)
+            raw_header = data[i*HEADER_BYTES:(i+1) * HEADER_BYTES]
+            header = deserialize_header(raw_header, index*CHUNK_LENGTH + i)
             self.verify_header(header, prev_hash, target)
             prev_hash = hash_header(header)
 
@@ -226,7 +229,7 @@ class Blockchain(util.PrintError):
 
     def save_chunk(self, index, chunk):
         filename = self.path()
-        d = (index * 1008 - self.checkpoint) * 336
+        d = (index * CHUNK_LENGTH - self.checkpoint) * HEADER_BYTES
         if d < 0:
             chunk = chunk[-d:]
             d = 0
@@ -249,10 +252,10 @@ class Blockchain(util.PrintError):
             my_data = f.read()
         self.assert_headers_file_available(parent.path())
         with open(parent.path(), 'rb') as f:
-            f.seek((checkpoint - parent.checkpoint)*336)
-            parent_data = f.read(parent_branch_size*336)
+            f.seek((checkpoint - parent.checkpoint)*HEADER_BYTES)
+            parent_data = f.read(parent_branch_size*HEADER_BYTES)
         self.write(parent_data, 0)
-        parent.write(my_data, (checkpoint - parent.checkpoint)*336)
+        parent.write(my_data, (checkpoint - parent.checkpoint)*HEADER_BYTES)
         # store file path
         for b in blockchains.values():
             b.old_path = b.path()
@@ -283,7 +286,7 @@ class Blockchain(util.PrintError):
         with self.lock:
             self.assert_headers_file_available(filename)
             with open(filename, 'rb+') as f:
-                if truncate and offset != self._size*336:
+                if truncate and offset != self._size*HEADER_BYTES:
                     f.seek(offset)
                     f.truncate()
                 f.seek(offset)
@@ -296,8 +299,8 @@ class Blockchain(util.PrintError):
         delta = header.get('block_height') - self.checkpoint
         data = bfh(serialize_header(header))
         assert delta == self.size()
-        assert len(data) == 336
-        self.write(data, delta*336)
+        assert len(data) == HEADER_BYTES
+        self.write(data, delta*HEADER_BYTES)
         self.swap_with_parent()
 
     def read_header(self, height):
@@ -312,11 +315,11 @@ class Blockchain(util.PrintError):
         name = self.path()
         self.assert_headers_file_available(name)
         with open(name, 'rb') as f:
-            f.seek(delta * 336)
-            h = f.read(336)
-            if len(h) < 336:
+            f.seek(delta * HEADER_BYTES)
+            h = f.read(HEADER_BYTES)
+            if len(h) < HEADER_BYTES:
                 raise Exception('Expected to read a full header. This was only {} bytes'.format(len(h)))
-        if h == bytes([0])*336:
+        if h == bytes([0])*HEADER_BYTES:
             return None
         return deserialize_header(h, height)
 
@@ -326,9 +329,9 @@ class Blockchain(util.PrintError):
             return '0000000000000000000000000000000000000000000000000000000000000000'
         elif height == 0:
             return constants.net.GENESIS
-        elif height < len(self.checkpoints) * 1008:
-            assert (height+1) % 1008 == 0, height
-            index = height // 1008
+        elif height < len(self.checkpoints) * CHUNK_LENGTH:
+            assert (height+1) % CHUNK_LENGTH == 0, height
+            index = height // CHUNK_LENGTH
             h, t = self.checkpoints[index]
             return h
         else:
@@ -344,8 +347,8 @@ class Blockchain(util.PrintError):
             h, t = self.checkpoints[index]
             return t
         # new target
-        first = self.read_header(index * 1008)
-        last = self.read_header(index * 1008 + 1007)
+        first = self.read_header(index * CHUNK_LENGTH)
+        last = self.read_header((index+1) * CHUNK_LENGTH - 1)
         bits = last.get('bits')
         target = self.bits_to_target(bits)
         nActualTimespan = last.get('timestamp') - first.get('timestamp')
@@ -390,7 +393,7 @@ class Blockchain(util.PrintError):
             return False
         if prev_hash != header.get('prev_block_hash'):
             return False
-        target = self.get_target(height // 1008 - 1)
+        target = self.get_target(height // CHUNK_LENGTH - 1)
         try:
             self.verify_header(header, prev_hash, target)
         except BaseException as e:
@@ -411,9 +414,9 @@ class Blockchain(util.PrintError):
     def get_checkpoints(self):
         # for each chunk, store the hash of the last block and the target after the chunk
         cp = []
-        n = self.height() // 1008
+        n = self.height() // CHUNK_LENGTH
         for index in range(n):
-            h = self.get_hash((index+1) * 1008 -1)
+            h = self.get_hash((index+1) * CHUNK_LENGTH -1)
             target = self.get_target(index)
             cp.append((h, target))
         return cp

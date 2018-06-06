@@ -118,3 +118,7 @@ def set_testnet():
 def set_regtest():
     global net
     net = BitcoinRegtest
+
+
+HEADER_BYTES = 336
+CHUNK_LENGTH = 1008
