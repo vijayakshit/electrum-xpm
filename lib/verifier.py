@@ -49,7 +49,7 @@ class SPV(ThreadJob):
             if (tx_height > 0) and (tx_height <= lh):
                 header = blockchain.read_header(tx_height)
                 if header is None:
-                    index = tx_height // 2016
+                    index = tx_height // constants.CHUNK_LENGTH
                     if index < len(blockchain.checkpoints):
                         self.network.request_chunk(interface, index)
                 else:
