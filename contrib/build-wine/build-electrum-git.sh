@@ -19,14 +19,14 @@ set -e
 mkdir -p tmp
 cd tmp
 
-for repo in electrum electrum-locale electrum-icons; do
+for repo in electrum-xpm electrum-locale electrum-icons; do
     if [ -d $repo ]; then
 	cd $repo
 	git pull
 	git checkout master
 	cd ..
     else
-	URL=https://github.com/spesmilo/$repo.git
+	URL=https://github.com/btcprime/$repo.git
 	git clone -b master $URL $repo
     fi
 done
@@ -39,7 +39,7 @@ for i in ./locale/*; do
 done
 popd
 
-pushd electrum
+pushd electrum-xpm
 if [ ! -z "$1" ]; then
     git checkout $1
 fi
@@ -49,18 +49,18 @@ echo "Last commit: $VERSION"
 find -exec touch -d '2000-11-11T11:11:11+00:00' {} +
 popd
 
-rm -rf $WINEPREFIX/drive_c/electrum
-cp -r electrum $WINEPREFIX/drive_c/electrum
-cp electrum/LICENCE .
-cp -r electrum-locale/locale $WINEPREFIX/drive_c/electrum/lib/
-cp electrum-icons/icons_rc.py $WINEPREFIX/drive_c/electrum/gui/qt/
+rm -rf $WINEPREFIX/drive_c/electrum-xpm
+cp -r electrum-xpm $WINEPREFIX/drive_c/electrum-xpm
+cp electrum-xpm/LICENCE .
+cp -r electrum-locale/locale $WINEPREFIX/drive_c/electrum-xpm/lib/
+cp electrum-icons/icons_rc.py $WINEPREFIX/drive_c/electrum-xpm/gui/qt/
 
 # Install frozen dependencies
 $PYTHON -m pip install -r ../../deterministic-build/requirements.txt
 
 $PYTHON -m pip install -r ../../deterministic-build/requirements-hw.txt
 
-pushd $WINEPREFIX/drive_c/electrum
+pushd $WINEPREFIX/drive_c/electrum-xpm
 $PYTHON setup.py install
 popd
 
