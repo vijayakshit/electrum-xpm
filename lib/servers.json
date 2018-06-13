@@ -1,5 +1,6 @@
 {
-    "xpm-mainnet-1.bitcoinprime.org.": {
-        "s": "50002"
+    "electrum1.primecommunity.org": {
+        "s": "50002",
+        "t": "50001"
     }
 }
