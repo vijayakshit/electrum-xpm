@@ -206,11 +206,12 @@ class Blockchain(util.PrintError):
             raise Exception("prev hash mismatch: %s vs %s" % (prev_hash, header.get('prev_block_hash')))
         if constants.net.TESTNET:
             return
-        bits = self.target_to_bits(target)
-        if bits != header.get('bits'):
-            raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
-        if int('0x' + _hash, 16) > target:
-            raise Exception("insufficient proof of work: %s vs target %s" % (int('0x' + _hash, 16), target))
+        return
+        # bits = self.target_to_bits(target)
+        # if bits != header.get('bits'):
+        #     raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
+        # if int('0x' + _hash, 16) > target:
+        #     raise Exception("insufficient proof of work: %s vs target %s" % (int('0x' + _hash, 16), target))
 
     def verify_chunk(self, index, data):
         num = len(data) // HEADER_BYTES
@@ -363,8 +364,8 @@ class Blockchain(util.PrintError):
         if not (bitsN >= 0x03 and bitsN <= 0x1d):
             raise Exception("First part of bits should be in [0x03, 0x1d]")
         bitsBase = bits & 0xffffff
-        if not (bitsBase >= 0x8000 and bitsBase <= 0x7fffff):
-            raise Exception("Second part of bits should be in [0x8000, 0x7fffff]")
+        #if not (bitsBase >= 0x8000 and bitsBase <= 0x7fffff):
+            #raise Exception("Second part of bits should be in [0x8000, 0x7fffff]")
         return bitsBase << (8 * (bitsN-3))
 
     def target_to_bits(self, target):
