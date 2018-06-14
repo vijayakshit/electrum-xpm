@@ -6,7 +6,7 @@
 ;--------------------------------
 ;Variables
 
-  !define PRODUCT_NAME "Electrum"
+  !define PRODUCT_NAME "Electrum XPM"
   !define PRODUCT_WEB_SITE "https://github.com/spesmilo/electrum"
   !define PRODUCT_PUBLISHER "Electrum Technologies GmbH"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -16,7 +16,7 @@
 
   ;Name and file
   Name "${PRODUCT_NAME}"
-  OutFile "dist/electrum-setup.exe"
+  OutFile "dist/electrum-xpm-setup.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
@@ -110,7 +110,7 @@ Section
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
   
   ;Files to pack into the installer
-  File /r "dist\electrum\*.*"
+  File /r "dist\electrum-xpm\*.*"
   File "..\..\icons\electrum.ico"
 
   ;Store installation folder
