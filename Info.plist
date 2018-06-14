@@ -9,7 +9,7 @@
       <string>bitcoin</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>bitcoin</string>
+        <string>primecoin</string>
       </array>
     </dict>
   </array>

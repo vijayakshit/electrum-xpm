@@ -15,11 +15,11 @@ FEE_ETA_TARGETS = [25, 10, 5, 2]
 FEE_DEPTH_TARGETS = [10000000, 5000000, 2000000, 1000000, 500000, 200000, 100000]
 
 # satoshi per kbyte
-FEERATE_MAX_DYNAMIC = 1500000
-FEERATE_WARNING_HIGH_FEE = 600000
-FEERATE_FALLBACK_STATIC_FEE = 150000
-FEERATE_DEFAULT_RELAY = 1000
-FEERATE_STATIC_VALUES = [5000, 10000, 20000, 30000, 50000, 70000, 100000, 150000, 200000, 300000]
+FEERATE_MAX_DYNAMIC = 1000000
+FEERATE_WARNING_HIGH_FEE = 10000000
+FEERATE_FALLBACK_STATIC_FEE = 1000000
+FEERATE_DEFAULT_RELAY = 1000000
+FEERATE_STATIC_VALUES = [1000000]
 
 
 config = None
@@ -436,7 +436,7 @@ class SimpleConfig(PrintError):
             return self.has_fee_etas()
 
     def is_dynfee(self):
-        return bool(self.get('dynamic_fees', True))
+        return False; #Static Fees
 
     def use_mempool_fees(self):
         return bool(self.get('mempool_fees', False))
@@ -477,8 +477,8 @@ class SimpleConfig(PrintError):
         # The GUI for simplicity reasons only displays integer sat/byte,
         # and for the sake of consistency, we thus only use integer sat/byte in
         # the backend too.
-        fee_per_byte = int(fee_per_kb / 1000)
-        return int(fee_per_byte * size)
+        # fee_per_byte = int(fee_per_kb / 1000)
+        return 1000000
 
     def update_fee_estimates(self, key, value):
         self.fee_estimates[key] = value

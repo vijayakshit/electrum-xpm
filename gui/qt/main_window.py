@@ -127,7 +127,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         self.need_update = threading.Event()
 
         self.decimal_point = config.get('decimal_point', 8)
-        self.num_zeros     = int(config.get('num_zeros', 0))
+        self.num_zeros     = int(config.get('num_zeros', 2))
 
         self.completions = QStringListModel()
 
@@ -1090,7 +1090,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         msg = _('Bitcoin transactions are in general not free. A transaction fee is paid by the sender of the funds.') + '\n\n'\
               + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed.') + '\n\n'\
               + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size of the transaction.')
-        self.fee_e_label = HelpLabel(_('Fee'), msg)
+        self.fee_e_label = HelpLabel(_('Fee : 0.01 XPM'), msg)
 
         def fee_cb(dyn, pos, fee_rate):
             if dyn:
@@ -1178,11 +1178,11 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         vbox_feecontrol = QVBoxLayout()
         vbox_feecontrol.addWidget(self.fee_adv_controls)
-        vbox_feecontrol.addWidget(self.fee_slider)
+        #vbox_feecontrol.addWidget(self.fee_slider)
 
         grid.addLayout(vbox_feecontrol, 5, 1, 1, -1)
 
-        if not self.config.get('show_fee', False):
+        if not self.config.get('show_fee', True):
             self.fee_adv_controls.setVisible(False)
 
         self.preview_button = EnterButton(_("Preview"), self.do_preview)
@@ -2641,36 +2641,36 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             _('Mempool based: fee rate is targeting a depth in the memory pool')
             ]
         )
-        fee_type_label = HelpLabel(_('Fee estimation') + ':', msg)
-        fee_type_combo = QComboBox()
-        fee_type_combo.addItems([_('Static'), _('ETA'), _('Mempool')])
-        fee_type_combo.setCurrentIndex((2 if self.config.use_mempool_fees() else 1) if self.config.is_dynfee() else 0)
-        def on_fee_type(x):
-            self.config.set_key('mempool_fees', x==2)
-            self.config.set_key('dynamic_fees', x>0)
-            self.fee_slider.update()
-        fee_type_combo.currentIndexChanged.connect(on_fee_type)
-        fee_widgets.append((fee_type_label, fee_type_combo))
+        # fee_type_label = HelpLabel(_('Fee estimation') + ':', msg)
+        # fee_type_combo = QComboBox()
+        # fee_type_combo.addItems([_('Static'), _('ETA'), _('Mempool')])
+        # fee_type_combo.setCurrentIndex((2 if self.config.use_mempool_fees() else 1) if self.config.is_dynfee() else 0)
+        # def on_fee_type(x):
+        #     self.config.set_key('mempool_fees', x==2)
+        #     self.config.set_key('dynamic_fees', x>0)
+        #     self.fee_slider.update()
+        # fee_type_combo.currentIndexChanged.connect(on_fee_type)
+        # fee_widgets.append((fee_type_label, fee_type_combo))
 
-        feebox_cb = QCheckBox(_('Edit fees manually'))
-        feebox_cb.setChecked(self.config.get('show_fee', False))
-        feebox_cb.setToolTip(_("Show fee edit box in send tab."))
-        def on_feebox(x):
-            self.config.set_key('show_fee', x == Qt.Checked)
-            self.fee_adv_controls.setVisible(bool(x))
-        feebox_cb.stateChanged.connect(on_feebox)
-        fee_widgets.append((feebox_cb, None))
+        # feebox_cb = QCheckBox(_('Edit fees manually'))
+        # feebox_cb.setChecked(self.config.get('show_fee', False))
+        # feebox_cb.setToolTip(_("Show fee edit box in send tab."))
+        # def on_feebox(x):
+        #     self.config.set_key('show_fee', x == Qt.Checked)
+        #     self.fee_adv_controls.setVisible(bool(x))
+        # feebox_cb.stateChanged.connect(on_feebox)
+        # fee_widgets.append((feebox_cb, None))
 
-        use_rbf_cb = QCheckBox(_('Use Replace-By-Fee'))
-        use_rbf_cb.setChecked(self.config.get('use_rbf', True))
-        use_rbf_cb.setToolTip(
-            _('If you check this box, your transactions will be marked as non-final,') + '\n' + \
-            _('and you will have the possibility, while they are unconfirmed, to replace them with transactions that pay higher fees.') + '\n' + \
-            _('Note that some merchants do not accept non-final transactions until they are confirmed.'))
-        def on_use_rbf(x):
-            self.config.set_key('use_rbf', x == Qt.Checked)
-        use_rbf_cb.stateChanged.connect(on_use_rbf)
-        fee_widgets.append((use_rbf_cb, None))
+        # use_rbf_cb = QCheckBox(_('Use Replace-By-Fee'))
+        # use_rbf_cb.setChecked(self.config.get('use_rbf', True))
+        # use_rbf_cb.setToolTip(
+        #     _('If you check this box, your transactions will be marked as non-final,') + '\n' + \
+        #     _('and you will have the possibility, while they are unconfirmed, to replace them with transactions that pay higher fees.') + '\n' + \
+        #     _('Note that some merchants do not accept non-final transactions until they are confirmed.'))
+        # def on_use_rbf(x):
+        #     self.config.set_key('use_rbf', x == Qt.Checked)
+        # use_rbf_cb.stateChanged.connect(on_use_rbf)
+        # fee_widgets.append((use_rbf_cb, None))
 
         msg = _('OpenAlias record, used to receive coins and to sign payment requests.') + '\n\n'\
               + _('The following alias providers are available:') + '\n'\
@@ -3111,7 +3111,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             fee_e.setAmount(fee)
         fee_slider = FeeSlider(self, self.config, on_rate)
         fee_slider.update()
-        grid.addWidget(fee_slider, 4, 1)
+        #grid.addWidget(fee_slider, 4, 1)
         vbox.addLayout(grid)
         vbox.addLayout(Buttons(CancelButton(d), OkButton(d)))
         if not d.exec_():
@@ -3144,7 +3144,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             fee = fee_rate * tx_size / 1000
             fee_e.setAmount(fee)
         fee_slider = FeeSlider(self, self.config, on_rate)
-        vbox.addWidget(fee_slider)
+        #vbox.addWidget(fee_slider)
         cb = QCheckBox(_('Final'))
         vbox.addWidget(cb)
         vbox.addLayout(Buttons(CancelButton(d), OkButton(d)))
