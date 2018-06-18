@@ -1177,13 +1177,13 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         hbox.addStretch(1)
 
         vbox_feecontrol = QVBoxLayout()
-        vbox_feecontrol.addWidget(self.fee_adv_controls)
+        #vbox_feecontrol.addWidget(self.fee_adv_controls)
         #vbox_feecontrol.addWidget(self.fee_slider)
 
         grid.addLayout(vbox_feecontrol, 5, 1, 1, -1)
 
-        if not self.config.get('show_fee', True):
-            self.fee_adv_controls.setVisible(False)
+        #if not self.config.get('show_fee', True):
+        self.fee_adv_controls.setVisible(False)
 
         self.preview_button = EnterButton(_("Preview"), self.do_preview)
         self.preview_button.setToolTip(_('Display the details of your transaction before signing it.'))
@@ -1232,7 +1232,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             else:
                 amt_color = ColorScheme.BLUE
                 fee_color = ColorScheme.BLUE
-                feerate_color = ColorScheme.BLUE
+                feerate_color = ColorScheme.BLUES
 
             self.statusBar().showMessage(text)
             self.amount_e.setStyleSheet(amt_color.as_stylesheet())
@@ -2486,7 +2486,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         export_meta_gui(self, _('labels'), export_labels)
 
     def sweep_key_dialog(self):
-        d = WindowModalDialog(self, title=_('Sweep private keys'))
+        d = WindowModalDialog(self, title=_('Sweep Private Keys'))
         d.setMinimumSize(600, 300)
 
         vbox = QVBoxLayout(d)
@@ -2656,8 +2656,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         # feebox_cb.setChecked(self.config.get('show_fee', False))
         # feebox_cb.setToolTip(_("Show fee edit box in send tab."))
         # def on_feebox(x):
-        #     self.config.set_key('show_fee', x == Qt.Checked)
-        #     self.fee_adv_controls.setVisible(bool(x))
+        self.config.set_key('show_fee', False)
+        self.fee_adv_controls.setVisible(False)
         # feebox_cb.stateChanged.connect(on_feebox)
         # fee_widgets.append((feebox_cb, None))
 
@@ -2668,7 +2668,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         #     _('and you will have the possibility, while they are unconfirmed, to replace them with transactions that pay higher fees.') + '\n' + \
         #     _('Note that some merchants do not accept non-final transactions until they are confirmed.'))
         # def on_use_rbf(x):
-        #     self.config.set_key('use_rbf', x == Qt.Checked)
+        self.config.set_key('use_rbf', True)
         # use_rbf_cb.stateChanged.connect(on_use_rbf)
         # fee_widgets.append((use_rbf_cb, None))
 
@@ -2946,7 +2946,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         fiat_widgets.append((QLabel(_('Source')), ex_combo))
 
         tabs_info = [
-            (fee_widgets, _('Fees')),
+            #(fee_widgets, _('Fees')),
             (tx_widgets, _('Transactions')),
             (gui_widgets, _('Appearance')),
             (fiat_widgets, _('Fiat')),
