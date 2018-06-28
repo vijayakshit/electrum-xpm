@@ -1087,10 +1087,10 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         hbox.addStretch(1)
         grid.addLayout(hbox, 4, 4)
 
-        msg = _('Bitcoin transactions are in general not free. A transaction fee is paid by the sender of the funds.') + '\n\n'\
-              + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed.') + '\n\n'\
-              + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size of the transaction.')
-        self.fee_e_label = HelpLabel(_('Fee : 0.01 XPM'), msg)
+        # msg = _('Bitcoin transactions are in general not free. A transaction fee is paid by the sender of the funds.') + '\n\n'\
+            #   + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed.') + '\n\n'\
+            #   + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size of the transaction.')
+        #self.fee_e_label = HelpLabel(_('Fee : 0.01 XPM'), msg)
 
         def fee_cb(dyn, pos, fee_rate):
             if dyn:
@@ -1162,10 +1162,10 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         self.connect_fields(self, self.amount_e, self.fiat_send_e, self.fee_e)
 
-        vbox_feelabel = QVBoxLayout()
-        vbox_feelabel.addWidget(self.fee_e_label)
-        vbox_feelabel.addStretch(1)
-        grid.addLayout(vbox_feelabel, 5, 0)
+        # vbox_feelabel = QVBoxLayout()
+        # vbox_feelabel.addWidget(self.fee_e_label)
+        # vbox_feelabel.addStretch(1)
+        # grid.addLayout(vbox_feelabel, 5, 0)
 
         self.fee_adv_controls = QWidget()
         hbox = QHBoxLayout(self.fee_adv_controls)
@@ -1222,17 +1222,17 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
                     text += ' (' + self.format_amount(c+u+x).strip() + ' ' + self.base_unit() + ' ' +_("are frozen") + ')'
 
             # blue color denotes auto-filled values
-            elif self.fee_e.isModified():
-                feerate_color = ColorScheme.BLUE
+            # elif self.fee_e.isModified():
+            #     feerate_color = ColorScheme.BLUE
             elif self.feerate_e.isModified():
                 fee_color = ColorScheme.BLUE
             elif self.amount_e.isModified():
                 fee_color = ColorScheme.BLUE
-                feerate_color = ColorScheme.BLUE
+                # feerate_color = ColorScheme.BLUE
             else:
                 amt_color = ColorScheme.BLUE
                 fee_color = ColorScheme.BLUE
-                feerate_color = ColorScheme.BLUES
+                # feerate_color = ColorScheme.BLUES
 
             self.statusBar().showMessage(text)
             self.amount_e.setStyleSheet(amt_color.as_stylesheet())
