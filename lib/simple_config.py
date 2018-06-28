@@ -3,6 +3,7 @@ import threading
 import time
 import os
 import stat
+import math
 
 from copy import deepcopy
 
@@ -445,17 +446,7 @@ class SimpleConfig(PrintError):
         """Returns sat/kvB fee to pay for a txn.
         Note: might return None.
         """
-        if dyn is None:
-            dyn = self.is_dynfee()
-        if mempool is None:
-            mempool = self.use_mempool_fees()
-        if dyn:
-            if mempool:
-                fee_rate = self.depth_to_fee(self.get_depth_level())
-            else:
-                fee_rate = self.eta_to_fee(self.get_fee_level())
-        else:
-            fee_rate = self.get('fee_per_kb', FEERATE_FALLBACK_STATIC_FEE)
+        fee_rate = self.get('fee_per_kb', FEERATE_FALLBACK_STATIC_FEE)
         return fee_rate
 
     def fee_per_byte(self):
@@ -477,8 +468,9 @@ class SimpleConfig(PrintError):
         # The GUI for simplicity reasons only displays integer sat/byte,
         # and for the sake of consistency, we thus only use integer sat/byte in
         # the backend too.
-        # fee_per_byte = int(fee_per_kb / 1000)
-        return 1000000
+        #fee_per_byte = int(fee_per_kb / 1000)
+        #1000000 per kb
+        return int(1000000 * math.ceil(size / 1000))
 
     def update_fee_estimates(self, key, value):
         self.fee_estimates[key] = value
