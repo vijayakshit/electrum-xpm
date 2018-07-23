@@ -4,7 +4,6 @@ MANIFEST.in
 README.rst
 RELEASE-NOTES
 electrum-xpm
-electrum-xpm.py
 electrum.desktop
 icons.qrc
 setup-release.py

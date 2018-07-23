@@ -16,7 +16,7 @@ echo "building icons"
 pyrcc5 icons.qrc -o gui/qt/icons_rc.py
 
 echo "Compile the protobuf description file"
-protoc --proto_path=lib/ --python_out=lib/ lib/paymentrequest.proto
+#protoc --proto_path=lib/ --python_out=lib/ lib/paymentrequest.proto
 
 echo "compiling translations"
 ./config/make_locale
