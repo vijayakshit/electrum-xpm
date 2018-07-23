@@ -16,18 +16,18 @@ VERSION=`git describe --tags --dirty`
 
 info "Installing Python $PYTHON_VERSION"
 export PATH="~/.pyenv/bin:~/.pyenv/shims:~/Library/Python/3.6/bin:$PATH"
-if [ -d "~/.pyenv" ]; then
-  pyenv update
-else
-  curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash > /dev/null 2>&1
-fi
+# if [ -d "~/.pyenv" ]; then
+#   pyenv update
+# else
+#   curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash > /dev/null 2>&1
+# fi
 PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install -s $PYTHON_VERSION && \
 pyenv global $PYTHON_VERSION || \
 fail "Unable to use Python $PYTHON_VERSION"
 
 
 info "Installing pyinstaller"
-python3 -m pip install git+https://github.com/ecdsa/pyinstaller@fix_2952 -I --user || fail "Could not install pyinstaller"
+# python3 -m pip install git+https://github.com/ecdsa/pyinstaller@fix_2952 -I --user || fail "Could not install pyinstaller"
 
 info "Using these versions for building $PACKAGE:"
 sw_vers
@@ -43,7 +43,7 @@ mkdir $BUILDDIR
 
 info "Downloading icons and locale..."
 for repo in icons locale; do
-  git clone $GIT_REPO-$repo $BUILDDIR/electrum-$repo
+  git clone https://github.com/BTCPrime/electrum-$repo $BUILDDIR/electrum-$repo
 done
 
 cp -R $BUILDDIR/electrum-locale/locale/ ./lib/locale/
@@ -60,9 +60,9 @@ python3 -m pip install -Ir ./contrib/deterministic-build/requirements.txt --user
 python3 -m pip install -Ir ./contrib/deterministic-build/requirements-binaries.txt --user || \
 fail "Could not install requirements"
 
-info "Installing hardware wallet requirements..."
-python3 -m pip install -Ir ./contrib/deterministic-build/requirements-hw.txt --user || \
-fail "Could not install hardware wallet requirements"
+# info "Installing hardware wallet requirements..."
+# python3 -m pip install -Ir ./contrib/deterministic-build/requirements-hw.txt --user || \
+# fail "Could not install hardware wallet requirements"
 
 info "Building $PACKAGE..."
 python3 setup.py install --user > /dev/null || fail "Could not build $PACKAGE"

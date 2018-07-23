@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Name: Electrum-XPM
+Version: 3.1.3
+Summary: Lightweight XPM Wallet
+Home-page: https://electrum.org
+Author: Thomas Voegtlin
+Author-email: thomasv@electrum.org
+License: MIT Licence
+Description: Lightweight XPM Wallet
+Platform: UNKNOWN
+Provides-Extra: full

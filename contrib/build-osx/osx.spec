@@ -7,7 +7,7 @@ import os
 
 PACKAGE='Electrum-XPM'
 PYPKG='electrum-xpm'
-MAIN_SCRIPT='electrum'
+MAIN_SCRIPT='electrum-xpm'
 ICONS_FILE='electrum.icns'
 
 for i, x in enumerate(sys.argv):
