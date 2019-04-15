@@ -698,7 +698,7 @@ class DigitalBitboxPlugin(HW_PluginBase):
         client.handler = self.create_handler(wizard)
         if purpose == HWD_SETUP_NEW_WALLET:
             client.setupRunning = True
-        client.get_xpub("m/44'/0'", 'standard')
+        client.get_xpub("m/44'/24'", 'standard')
 
 
     def is_mobile_paired(self):

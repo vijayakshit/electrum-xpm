@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = Electrum
+title = Electrum XPM
 
 # (str) Package name
-package.name = Electrum
+package.name = ElectrumXpm
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.electrum
@@ -24,11 +24,11 @@ source.exclude_dirs = bin, build, dist, contrib, gui/qt, gui/kivy/tools, gui/kiv
 source.exclude_patterns = Makefile,setup*
 
 # (str) Application versioning (method 1)
-version.regex = version_apk = '(.*)'
-version.filename = %(source.dir)s/contrib/versions.py
+#version.regex = version_apk = '(.*)'
+#version.filename = %(source.dir)s/lib/version.py
 
 # (str) Application versioning (method 2)
-#version = 1.9.8
+version = 1.9.8
 
 # (list) Application requirements
 requirements = python3crystax==3.6, android, openssl, plyer, kivy==master
