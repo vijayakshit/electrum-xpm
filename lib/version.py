@@ -1,6 +1,6 @@
-ELECTRUM_VERSION = '3.1.3'   # version of the client package
+ELECTRUM_VERSION = '3.1.4'   # version of the client package
 PROTOCOL_VERSION = '1.2'     # protocol version requested
-version_apk = '3.1.3'
+version_apk = '3.1.4'
 # The hash of the mnemonic seed must begin with this
 SEED_PREFIX      = '01'      # Standard wallet
 SEED_PREFIX_2FA  = '101'     # Two-factor authentication

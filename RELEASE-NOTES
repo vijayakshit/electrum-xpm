@@ -1,3 +1,9 @@
+# Release 3.1.4 - (April 16, 2019)
+
+ * Trezor Support
+ * Fix Bip44 derivation
+ * Change servers
+
 # Release 3.1.3 - (April 16, 2018)
 
  * Qt GUI: seed word auto-complete during restore
@@ -160,7 +166,7 @@ issue #3374. Users should upgrade to 3.0.5.
     run "python3 setup.py install" in order to install the new
     dependencies.
 
-  * Segwit support: 
+  * Segwit support:
 
     - Native segwit scripts are supported using a new type of
       seed. The version number for segwit seeds is 0x100. The install
