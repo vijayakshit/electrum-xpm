@@ -26,7 +26,7 @@ for repo in electrum-xpm electrum-locale electrum-icons; do
 	git checkout master
 	cd ..
     else
-	URL=https://github.com/btcprime/$repo.git
+	URL=https://github.com/justjamesdev/$repo.git
 	git clone -b master $URL $repo
     fi
 done
